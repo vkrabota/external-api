@@ -1171,3 +1171,125 @@ Content-Type: application/json; charset=utf-8
     }
 }
 ```
+
+## Загрузка фонового изображения
+
+Для добавления фонового изображения к необходимо отправить PUT-запрос на `/api/external/v1/backgrounds` с  заголовком `Content-Type: multipart/form-data`.
+
+Обязательные параметы:
+    * data - файл с изображением
+Опциональные параметры:
+    * job_ids[] - массив идентификаторов вакансий, при его отсутствии заменится фоновое изображение привязанное к пользователю, под которым размещаются вакании(при отсутствии у вакансии своего фона, будет использован фон пользователя)
+    * crop_h, crop_w - высота и ширина до которых нужно обрезать изображение
+    * crop_x, crop_y - что это точка(отчет от левого нижнего угла) с которой будет обрезаться изображение(отсекутся часть где x или y меньше указанных)
+
+Результат будет в следующем виде (JSON API-ответ отформатирован для наглядности)
+
+Обратите внимание, в ответе будет всегда приходить 200, даже если какое-то из изображений не удалось сохранить, о наличии ошибки можно судить по отсутствующему id фонового изображения и наличию непустого поля errors. Если вакансия не принадлежит вашему пользователю или отсутствует, то изображение с соответствующим assetable_id не будет обработано и доавлено в ответ
+
+```
+curl --request PUT \
+  --url 'https://api.iconjob.co/api/external/v1/background' \
+  --header 'authorization: Worki <JWT Token>' \
+  --header 'content-type: multipart/form-data; boundary=---011000010111000001101001' \
+  --form data=<binary-data-here>\
+  --form 'job_ids[]=39085' \
+  --form 'job_ids[]=39086' \
+  --form crop_h=480 \
+  --form crop_w=640 \
+  --form crop_x=120 \
+  --form crop_y=200
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+{
+  "data": [
+    {
+      "id": "4913",
+      "type": "background_extended",
+      "attributes": {
+        "id": 4913,
+        "assetable_type": "Job",
+        "assetable_id": 39085,
+        "content_type": "image/jpeg",
+        "original": "https://example.com/123/bg.jpg",
+        "cropped": "https://example.com/124/croped/bg.jpg",
+        "errors": {}
+      }
+    },
+    {
+      "id": null,
+      "type": "background_extended",
+      "attributes": {
+        "id": null,
+        "assetable_type": "Job",
+        "assetable_id": 39086,
+        "content_type": "image/jpeg",
+        "original": "https://example.com/124/bg.jpg",
+        "cropped": "https://example.com/124/croped/bg.jpg",
+        "errors": {
+          "base": [
+            "Размер обрезанного изображения меньше допустимого (640×180)"
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+## Удаление фонового изображения
+
+Для удаления фонового изображения к необходимо отправить DELETE-запрос на `/api/external/v1/backgrounds`
+
+Опциональные параметры:
+    * job_ids[] - массив идентификаторов вакансий, при его отсутствии удалится фоновое изображение привязанное к пользователю, под которым размещаются вакании(при отсутствии у вакансии своего фона, будет использован фон пользователя)
+
+Результат будет в следующем виде (JSON API-ответ отформатирован для наглядности)
+
+Обратите внимание, в ответе будет всегда приходить 200. Если вакансия не принадлежит вашему пользователю, отсутствует или не содержит фонового изображение, то изображение с соответствующим assetable_id не будет обработано и доавлено в ответ
+
+```
+curl --request DELETE \
+  --url 'https://api.iconjob.co/api/external/v1/background' \
+  --header 'authorization: Worki <JWT Token>' \
+  --header 'content-type: application/json' \
+  --cookie __profilin=p%253Dt \
+  --data '{ "job_ids ": [
+        "39085", "39086"
+    ]
+}'
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+{
+  "data": [
+    {
+      "id": "4904",
+      "type": "background_extended",
+      "attributes": {
+        "id": 4904,
+        "assetable_type": "User",
+        "assetable_id": 2138,
+        "content_type": "image/jpeg",
+        "original": "https://example.com/123/bg.jpg",
+        "cropped": "https://example.com/123/croped/bg.jpg",
+        "errors": {}
+      }
+    },
+    {
+      "id": "4905",
+      "type": "background_extended",
+      "attributes": {
+        "id": 4905,
+        "assetable_type": "User",
+        "assetable_id": 2138,
+        "content_type": "image/jpeg",
+        "original": "https://example.com/124/bg.jpg",
+        "cropped": "https://example.com/124/croped/bg.jpg",
+        "errors": {}
+      }
+    }
+  ]
+}
+```
