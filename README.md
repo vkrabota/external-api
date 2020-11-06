@@ -4,7 +4,7 @@
 
 ## Аббревиатуры
 `VAS` - Value Added Service. Услуга, которую мы предоставляем. VAS'ы бывают:
-1) размещение вакансии. Код: `job_publication`.
+1) размещение вакансии. Код: `job_publication` для обычной публикации, `super_job_publish` для продвинутой публикации, `ultra_job_publish` для премиум-публикации
 2) поднятие вакансии в поиске. Код `job_refresh`.
 3) выделение вакансии на 24 часа. Код `job_highlight`.
 4) вакансия дня на 1/3/7 дней. Код 7 дней - `elevation_plus`, 3 дней - `elevation_3d`, 1 день - `elevation_1d`.
@@ -37,6 +37,7 @@
 * `expires_at` - дата истечения времени публикации вакансии
 * `auto_renew` - флаг автоматического продления вакансии
 * `remote` - удаленная работа
+* `current_publication_type` - текущий тип публикации. Бывает: `not_published` - не опубликована, `job_publish` - обычная публикация, `super_job_publish` - продвинутая публикация, `ultra_job_publish` - премиум публикация
 
 #### Profession
 
@@ -221,7 +222,8 @@ Content-Type: application/json; charset=utf-8
                 "salary_from": null,
                 "salary_to": null,
                 "salary_period": null,
-                "expires_at": "2019-03-11T9:21:19.001+03:00"
+                "expires_at": "2019-03-11T9:21:19.001+03:00",
+                "current_publication_type": "job_publish"                
             }
         },
         {
@@ -238,7 +240,8 @@ Content-Type: application/json; charset=utf-8
                 "salary_to": 50000,
                 "salary_period": "monthly",
                 "expires_at": "2019-03-14T10:37:22.813+03:00",
-                "remote": false
+                "remote": false,
+                "current_publication_type": "job_publish"
             }
         }
     ]
@@ -318,12 +321,12 @@ Content-Type: application/json; charset=utf-8
 Пример успешного создания вакансии:
 
 ```
-$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/jobs -H 'Content-Type: application/json' -d '{"job": { "title": "Тестовая вакансия", "description": "Тестовое описание", "lat": 55.35, "long": 37.55, "address": "Москва. Солянка ул., 9", "remote": true}, "profession_id": 3}'
+$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/jobs -H 'Content-Type: application/json' -d '{"job": { "title": "Тестовая вакансия", "description": "Тестовое описание", "lat": 55.35, "long": 37.55, "address": "Москва. Солянка ул., 9", "remote": true}, "profession_id": 3, "publication_type": "super_job_publish"}'
 
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 
-{"data":{"id":"651","type":"job","attributes":{"title": "Тестовая вакансия", "description": "Тестовое описание", "lat": 55.35, "long": 37.55, "address": "Москва. Солянка ул., 9","salary_from":null,"salary_to":null,"salary_period":null,"expires_at": "2019-04-11T12:41:29.237+03:00", "remote": true}}}
+{"data":{"id":"651","type":"job","attributes":{"title": "Тестовая вакансия", "description": "Тестовое описание", "lat": 55.35, "long": 37.55, "address": "Москва. Солянка ул., 9","salary_from":null,"salary_to":null,"salary_period":null,"expires_at": "2019-04-11T12:41:29.237+03:00", "remote": true, "current_publication_type": "super_job_publish"}}}
 ```
 
 Пример ошибки при создании вакансии:
