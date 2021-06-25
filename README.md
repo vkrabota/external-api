@@ -1331,3 +1331,229 @@ Content-Type: application/json; charset=utf-8
   ]
 }
 ```
+
+## Получение списка пакетов
+
+Для получения списка пакетов к необходимо отправить GET-запрос на `/api/external/v1/packets`
+
+Опциональные параметры:
+    * fias_id — guid региона согласно [ФИАС](https://fias.nalog.ru/)
+    * packet_type - строка, тип пакета. Должен быть одним из следующих значений: `job_packet`, `temporary_view_1d`, `view_packet`
+    * status - строка, статус пакета. Должен быть одним из следующих значений: `active`, `archived`
+
+Результат будет в следующем виде (JSON API-ответ отформатирован для наглядности)
+
+```
+$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/packets
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{"packets"=>
+  [{"start_time"=>"2021-06-25T11:49:38.515+03:00",
+    "end_time"=>"2021-06-26T11:49:38.515+03:00",
+    "current_step"=>
+     {"start_time"=>"2021-06-25T11:49:38.515+03:00",
+      "end_time"=>"2021-06-26T11:49:38.515+03:00",
+      "active"=>true,
+      "packet_type"=>"job_packet",
+      "prolongable"=>false,
+      "russian_region"=>"Region 16",
+      "hidden"=>false,
+      "price"=>nil,
+      "fias_id"=>"01d3b0b4-7fca-486a-8b54-73e8b729fd4d",
+      "prices"=>
+       [{"code"=>"job_publish", "price"=>0},
+        {"code"=>"super_job_publish", "price"=>0},
+        {"code"=>"ultra_job_publish", "price"=>0},
+        {"code"=>"job_refresh", "price"=>0},
+        {"code"=>"job_highlight", "price"=>0},
+        {"code"=>"contact_view", "price"=>0},
+        {"code"=>"job_elevate_plus", "price"=>0},
+        {"code"=>"job_elevate_1d", "price"=>0},
+        {"code"=>"job_elevate_3d", "price"=>0}],
+      "limits"=>
+       [{"code"=>"job_publish", "initial"=>0, "left"=>10, "default"=>0},
+        {"code"=>"super_job_publish", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"ultra_job_publish", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"job_refresh", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"job_highlight", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"contact_view", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"job_elevate_plus", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"job_elevate_1d", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"job_elevate_3d", "initial"=>0, "left"=>0, "default"=>0}],
+      "created_at"=>"2021-06-25T11:49:38.879+03:00",
+      "initial_views_limit"=>0,
+      "views_limit"=>0,
+      "buy_transaction_type"=>"BonusTransaction",
+      "job_category_uuid"=>"00000000-0000-0000-0000-000000000000"},
+    "last_step"=>
+     {"start_time"=>"2021-06-25T11:49:38.515+03:00",
+      "end_time"=>"2021-06-26T11:49:38.515+03:00",
+      "active"=>true,
+      "packet_type"=>"job_packet",
+      "prolongable"=>false,
+      "russian_region"=>"Region 16",
+      "hidden"=>false,
+      "price"=>nil,
+      "fias_id"=>"01d3b0b4-7fca-486a-8b54-73e8b729fd4d",
+      "prices"=>
+       [{"code"=>"job_publish", "price"=>0},
+        {"code"=>"super_job_publish", "price"=>0},
+        {"code"=>"ultra_job_publish", "price"=>0},
+        {"code"=>"job_refresh", "price"=>0},
+        {"code"=>"job_highlight", "price"=>0},
+        {"code"=>"contact_view", "price"=>0},
+        {"code"=>"job_elevate_plus", "price"=>0},
+        {"code"=>"job_elevate_1d", "price"=>0},
+        {"code"=>"job_elevate_3d", "price"=>0}],
+      "limits"=>
+       [{"code"=>"job_publish", "initial"=>0, "left"=>10, "default"=>0},
+        {"code"=>"super_job_publish", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"ultra_job_publish", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"job_refresh", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"job_highlight", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"contact_view", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"job_elevate_plus", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"job_elevate_1d", "initial"=>0, "left"=>0, "default"=>0},
+        {"code"=>"job_elevate_3d", "initial"=>0, "left"=>0, "default"=>0}],
+      "created_at"=>"2021-06-25T11:49:38.879+03:00",
+      "initial_views_limit"=>0,
+      "views_limit"=>0,
+      "buy_transaction_type"=>"BonusTransaction",
+      "job_category_uuid"=>"00000000-0000-0000-0000-000000000000"},
+    "days_count"=>1,
+    "left_days_count"=>1,
+    "id"=>151,
+    "free"=>nil,
+    "auto_prolongable"=>false}],
+ "meta"=>
+  {"total"=>1,
+   "active"=>1,
+   "archived"=>0,
+   "active_total"=>3,
+   "archived_total"=>1,
+   "free_total"=>1,
+   "paid_total"=>2}}
+```
+
+
+## Получение баланса пакетов
+
+Для получения баланса пакетов необходимо отправить GET-запрос на `/api/external/v1/packets/categories_balance`
+
+Результат будет в следующем виде (JSON API-ответ отформатирован для наглядности)
+
+```
+$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/packets/categories_balance
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{"items"=>
+  [{"fias_id"=>"00000000-0000-0000-0000-000000000000",
+    "job_category_uuid"=>"00000000-0000-0000-0000-000000000000",
+    "balance"=>
+     [{"bought"=>10, "free"=>0, "code"=>"job_publish"},
+      {"bought"=>0, "free"=>0, "code"=>"super_job_publish"},
+      {"bought"=>0, "free"=>0, "code"=>"ultra_job_publish"},
+      {"bought"=>0, "free"=>0, "code"=>"job_refresh"},
+      {"bought"=>0, "free"=>0, "code"=>"job_highlight"},
+      {"bought"=>0, "free"=>0, "code"=>"contact_view"},
+      {"bought"=>0, "free"=>0, "code"=>"job_elevate_plus"},
+      {"bought"=>0, "free"=>0, "code"=>"job_elevate_1d"},
+      {"bought"=>0, "free"=>0, "code"=>"job_elevate_3d"}]},
+   {"fias_id"=>"00000000-0000-0000-0000-000000000000",
+    "job_category_uuid"=>"38dca0fe-8ecb-4fbb-ac92-85a698b1ab04",
+    "balance"=>
+     [{"code"=>"job_publish", "free"=>1, "bought"=>0},
+      {"code"=>"super_job_publish", "free"=>0, "bought"=>0},
+      {"code"=>"ultra_job_publish", "free"=>0, "bought"=>0},
+      {"code"=>"job_refresh", "free"=>0, "bought"=>0},
+      {"code"=>"job_highlight", "free"=>0, "bought"=>0},
+      {"code"=>"contact_view", "free"=>0, "bought"=>0},
+      {"code"=>"job_elevate_plus", "free"=>0, "bought"=>0},
+      {"code"=>"job_elevate_1d", "free"=>0, "bought"=>0},
+      {"code"=>"job_elevate_3d", "free"=>0, "bought"=>0}]}],
+ "last_view_access_group_packet"=>
+  {"start_time"=>"2021-06-24T13:31:20.134+03:00",
+   "end_time"=>"2021-06-26T13:31:20.134+03:00",
+   "current_step"=>
+    {"start_time"=>"2021-06-24T13:31:20.134+03:00",
+     "end_time"=>"2021-06-25T13:31:20.134+03:00",
+     "active"=>true,
+     "packet_type"=>"temporary_view_1d",
+     "prolongable"=>true,
+     "russian_region"=>"Region 1",
+     "hidden"=>false,
+     "price"=>nil,
+     "fias_id"=>"00000000-0000-0000-0000-000000000000",
+     "prices"=>
+      [{"code"=>"job_publish", "price"=>0},
+       {"code"=>"super_job_publish", "price"=>0},
+       {"code"=>"ultra_job_publish", "price"=>0},
+       {"code"=>"job_refresh", "price"=>0},
+       {"code"=>"job_highlight", "price"=>0},
+       {"code"=>"contact_view", "price"=>0},
+       {"code"=>"job_elevate_plus", "price"=>0},
+       {"code"=>"job_elevate_1d", "price"=>0},
+       {"code"=>"job_elevate_3d", "price"=>0}],
+     "limits"=>
+      [{"code"=>"job_publish", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"super_job_publish", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"ultra_job_publish", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"job_refresh", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"job_highlight", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"contact_view", "initial"=>250, "left"=>249, "default"=>150},
+       {"code"=>"job_elevate_plus", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"job_elevate_1d", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"job_elevate_3d", "initial"=>0, "left"=>0, "default"=>0}],
+     "created_at"=>"2021-06-25T13:21:20.559+03:00",
+     "initial_views_limit"=>250,
+     "views_limit"=>249,
+     "buy_transaction_type"=>"PaymentTransaction",
+     "job_category_uuid"=>"00000000-0000-0000-0000-000000000000"},
+   "last_step"=>
+    {"start_time"=>"2021-06-25T13:31:20.134+03:00",
+     "end_time"=>"2021-06-26T13:31:20.134+03:00",
+     "active"=>false,
+     "packet_type"=>"temporary_view_1d",
+     "prolongable"=>true,
+     "russian_region"=>"Region 1",
+     "hidden"=>false,
+     "price"=>nil,
+     "fias_id"=>"00000000-0000-0000-0000-000000000000",
+     "prices"=>
+      [{"code"=>"job_publish", "price"=>0},
+       {"code"=>"super_job_publish", "price"=>0},
+       {"code"=>"ultra_job_publish", "price"=>0},
+       {"code"=>"job_refresh", "price"=>0},
+       {"code"=>"job_highlight", "price"=>0},
+       {"code"=>"contact_view", "price"=>0},
+       {"code"=>"job_elevate_plus", "price"=>0},
+       {"code"=>"job_elevate_1d", "price"=>0},
+       {"code"=>"job_elevate_3d", "price"=>0}],
+     "limits"=>
+      [{"code"=>"job_publish", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"super_job_publish", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"ultra_job_publish", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"job_refresh", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"job_highlight", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"contact_view", "initial"=>250, "left"=>250, "default"=>150},
+       {"code"=>"job_elevate_plus", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"job_elevate_1d", "initial"=>0, "left"=>0, "default"=>0},
+       {"code"=>"job_elevate_3d", "initial"=>0, "left"=>0, "default"=>0}],
+     "created_at"=>"2021-06-25T13:21:20.628+03:00",
+     "initial_views_limit"=>250,
+     "views_limit"=>250,
+     "buy_transaction_type"=>"PaymentTransaction",
+     "job_category_uuid"=>"00000000-0000-0000-0000-000000000000"},
+   "days_count"=>2,
+   "left_days_count"=>1,
+   "id"=>141,
+   "free"=>true,
+   "auto_prolongable"=>false},
+ "meta"=>{"hidden_packet_expires_at"=>nil}}
+```
+
+
