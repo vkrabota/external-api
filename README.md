@@ -1338,7 +1338,6 @@ Content-Type: application/json; charset=utf-8
 
 Опциональные параметры:
 * fias_id — guid региона согласно [ФИАС](https://fias.nalog.ru/)
-* packet_type - строка, тип пакета. Должен быть одним из следующих значений: `job_packet`, `temporary_view_1d`, `view_packet`
 * status - строка, статус пакета. Должен быть одним из следующих значений: `active`, `archived`
 
 Результат будет в следующем виде (JSON API-ответ отформатирован для наглядности)
