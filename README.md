@@ -1,6 +1,46 @@
 # VK Работа External API
 
-Внешнее API VK Работа предоставляет возможности для автоматизированного добавления новых вакансий, управления статусами вакансий, получения списка откликов и управления статусами откликов.
+Внешнее API VK Работа предоставляет возможности для автоматизированного добавления новых вакансий, управления статусами вакансий, получения списка откликов, управления статусами откликов, поиска и покупки контактов.
+
+## Содержание
+
+* [Аббревиатуры](#аббревиатуры)
+* [Основные схемы данных](#основные-схемы-данных)
+  * [Job](#job)
+  * [Profession](#profession)
+  * [Application](#application)
+  * [Candidate](#candidate)
+  * [Company](#company)
+  * [Vas Transaction](#vas-transaction)
+  * [Paid Action](#paid-action)
+  * [Region](#region)
+* [Аутентификация в API VK Работа](#аутентификация-в-api-vk-работа)
+  * [Использование сессионных токенов](#использование-сессионных-токенов)
+  * [Получение сессионного токена](#получение-сессионного-токена)
+* [Вакансии](#вакансии)
+  * [Получение списка вакансий](#получение-списка-вакансий)
+  * [Создание вакансии](#создание-вакансии)
+  * [Изменение вакансии](#изменение-вакансии)
+  * [Получение информации о конкретной вакансии](#получение-информации-о-конкретной-вакансии)
+  * [Закрытие вакансии](#закрытие-вакансии)
+  * [Продление вакансии](#продление-вакансии)
+* [Получение списка профессий](#получение-списка-профессий)
+* [Получение списка регионов](#получение-списка-регионов)
+* [Получение списка гражданств](#получение-списка-гражданств)
+* [Отклики](#отклики)
+  * [Получение списка откликов](#получение-списка-откликов)
+  * [Изменение статуса отклика](#изменение-статуса-отклика)
+* [Баланс компании и VAS'ы](#баланс-компании-и-vasы)
+  * [Получение состояния баланса компании](#получение-состояния-баланса-компании)
+  * [Получение списка транзакций VAS'ов](#получение-списка-транзакций-vasов)
+  * [Применение VAS'ов](#применение-vasов)
+* [Поиск и покупка контактов из базы резюме](#поиск-и-покупка-контактов-из-базы-резюме)
+  * [Поиск кандидатов](#поиск-кандидатов)
+  * [Покупка контакта](#покупка-контакта)
+  * [Просмотр контакта](#просмотр-контакта)
+* [Фоновое изображение](#фоновое-изображение)
+  * [Загрузка фонового изображения](#загрузка-фонового-изображения)
+  * [Удаление фонового изображения](#удаление-фонового-изображения)
 
 ## Аббревиатуры
 `VAS` - Value Added Service. Услуга, которую мы предоставляем. VAS'ы бывают:
@@ -46,7 +86,7 @@
 * `id` - первичный ключ, идентификатор профессии в API VK Работа
 * `title` - обязательный атрибут, название профессии, строка
 
-### Application
+#### Application
 
 Модель `Application` служит для хранения информации об отклике, устанавливает связь между вакансией (модель `Job`) и кандидатом (модель `Candidate`) и имеет следующие атрибуты:
 
@@ -59,7 +99,7 @@
 
 В каждый момент времени один кандидат может иметь только один отклик на одну вакансию.
 
-### Candidate
+#### Candidate
 
 Модель `Candidate` служит для хранения информации о кандидате и имеет следующие атрибуты:
 
@@ -92,7 +132,7 @@
 * `nationality` - необязательный атрибут, строка, информация о гражданстве кандидата
 * `video_resume` - необязательный атрибут, строка, ссылка на видеорезюме кандидата
 
-### Company
+#### Company
 
 Модель `Company` служит для хранения информации о компании, балансе денежных средств и OTVAS'ов.
 * `id` - идентификатор компании в системе
@@ -107,7 +147,7 @@
 * `wallet_id` - номер кошелька компании
 * `otvas_expires_at` - дата истечения срока жизни OTVAS'ов
 
-### Vas Transaction
+#### Vas Transaction
 
 Модель `Vas Transaction` служит для хранения данных об изменениях баланса VAS'ов.
 * `created_at` - дата создания транзакции
@@ -116,7 +156,7 @@
 * `creator` - автор транзакции
 * `applied_changes` - массив совершенных изменений
 
-### Paid Action
+#### Paid Action
 
 Модель `Paid Action` является служебной для возвращения данных о только что примененных/использованных VAS'ах.
 * `error_message` - текст сообщения об ошибке(если ошибки нет - `null`)
@@ -129,7 +169,7 @@
 
 Здесь и далее необязательные атрибуты могут принимать значение `null`, быть пустыми массивами а также не требоваться для создания новых объектов, обязательные атрибуты всегда имеют значение не `null` и должны передаваться для создания новых объектов.
 
-### Region
+#### Region
 
 Модель `Region` содержит данные о регионе вакансии.
 * `fias_id` — guid региона согласно [ФИАС](https://fias.nalog.ru/)
@@ -195,7 +235,9 @@ Content-Type: application/json; charset=utf-8
 {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX3R5cGUiOiJBcGlVc2VyIiwiZXhwIjoxNTMwMjI5NDI5fQ.DOmtBLljWXtk7bcvER_NCz-X1tmNoyLxWyfgTTukQbU"}
 ```
 
-## Получение списка вакансий
+## Вакансии
+
+### Получение списка вакансий
 
 Для получения списка вакансий необходимо отправить GET-запрос на `/api/external/v1/jobs`.
 
@@ -247,6 +289,96 @@ Content-Type: application/json; charset=utf-8
     ]
 }
 ```
+
+### Создание вакансии
+
+Для создания вакансии необходимо отправить POST-запрос на `/api/external/v1/jobs`. В ответе будет либо JSON-представление созданной вакансии, либо сообщение об ошибке.
+
+Пример успешного создания вакансии:
+
+```
+$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/jobs -H 'Content-Type: application/json' -d '{"job": { "title": "Тестовая вакансия", "description": "Тестовое описание", "lat": 55.35, "long": 37.55, "address": "Москва. Солянка ул., 9", "remote": true}, "profession_id": 3, "publication_type": "super_job_publish"}'
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{"data":{"id":"651","type":"job","attributes":{"title": "Тестовая вакансия", "description": "Тестовое описание", "lat": 55.35, "long": 37.55, "address": "Москва. Солянка ул., 9","salary_from":null,"salary_to":null,"salary_period":null,"expires_at": "2019-04-11T12:41:29.237+03:00", "remote": true, "current_publication_type": "super_job_publish"}}}
+```
+
+Пример ошибки при создании вакансии:
+
+```
+$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/jobs -H 'Content-Type: application/json' -d '{"job": { "title": "test title" }}'
+
+HTTP/1.1 422 Unprocessable Entity
+Content-Type: application/json; charset=utf-8
+
+{"errors":[{"detail":"Возникли ошибки: Поле 'Адрес' не может быть пустым"}]}
+
+```
+
+### Изменение вакансии
+
+Для изменения вакансии необходимо отправить PUT-запрос на `/api/external/v1/jobs/<id>`, где <id> - идентификатор вакансии. В ответе будет либо JSON-представление созданной вакансии, либо сообщение об ошибке.
+
+Пример успешного обновления вакансии:
+
+```
+$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/jobs/122 -H 'Content-Type: application/json' -d '{"job": { "title": "Новая тестовая вакансия" }}'
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{"data":{"id":"122","type":"job","attributes":{"title": "Новая тестовая вакансия", "description": "Тестовое описание", "lat": 55.35, "long": 37.55, "address": "Москва. Солянка ул., 9","salary_from":null,"salary_to":null,"salary_period":null,"expires_at": "2019-03-14T22:17:56.961+03:00","remote": true}}}
+```
+
+### Получение информации о конкретной вакансии
+
+Для получения информации о конкретной вакансии, необходимо отправить GET-запрос на `/api/external/v1/jobs/<id>`, где <id> - идентификатор вакансии. В ответе будет JSON-представление вакансии либо сообщение об ошибке, если такой вакансии не существует.
+
+```$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/jobs/254
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+    "data": [
+        {
+            "id": "254",
+            "type": "job",
+            "attributes": {
+                "title": "Первая тестовая вакансия",
+                "description": "Описание первой тестовой вакансии",
+                "status": "active",
+                "lat": 55.7346276065292,
+                "long": 37.5734168663621,
+                "address": "Москва, улица Еланского, 2",
+                "salary_from": null,
+                "salary_to": null,
+                "salary_period": null,
+                "expires_at": "2019-03-22T18:02:13.462+03:00",
+                "remote": true
+            }
+        }
+}
+```
+
+### Закрытие вакансии
+
+Для того, чтобы снять вакансию из ленты, необходимо отправить POST-запрос вида `/api/external/v1/jobs/<id>/close`, где `<id>` - идентификатор вакансии, а также параметр `reason`, который должен принимать одно из следующих значений:
+
+* `closed_found` - вакансия закрыта, кандидат найден
+* `closed_irrelevant` - вакансия более неактуальна
+
+
+В ответе будет JSON-представление закрытой вакансии либо сообщение об ошибке.
+
+
+### Продление вакансии
+
+Для того, чтобы продлить вакансию, необходимо отправить POST-запрос вида `/api/external/v1/jobs/<id>/revive`, где `<id>` - идентификатор вакансии.
+
+В ответе будет JSON-представление закрытой вакансии либо сообщение об ошибке.
 
 ## Получение списка профессий
 
@@ -314,97 +446,126 @@ Content-Type: application/json; charset=utf-8
 
 ```
 
-## Создание вакансии
+## Получение списка гражданств
 
-Для создания вакансии необходимо отправить POST-запрос на `/api/external/v1/jobs`. В ответе будет либо JSON-представление созданной вакансии, либо сообщение об ошибке.
-
-Пример успешного создания вакансии:
+Для получения списка поддерживаемых гражданств необходимо отправить GET-запрос на `/api/external/v1/nationalities`. Результатом будет список гражданств с идентификаторами:
 
 ```
-$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/jobs -H 'Content-Type: application/json' -d '{"job": { "title": "Тестовая вакансия", "description": "Тестовое описание", "lat": 55.35, "long": 37.55, "address": "Москва. Солянка ул., 9", "remote": true}, "profession_id": 3, "publication_type": "super_job_publish"}'
+$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/nationalities
 
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-
-{"data":{"id":"651","type":"job","attributes":{"title": "Тестовая вакансия", "description": "Тестовое описание", "lat": 55.35, "long": 37.55, "address": "Москва. Солянка ул., 9","salary_from":null,"salary_to":null,"salary_period":null,"expires_at": "2019-04-11T12:41:29.237+03:00", "remote": true, "current_publication_type": "super_job_publish"}}}
-```
-
-Пример ошибки при создании вакансии:
-
-```
-$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/jobs -H 'Content-Type: application/json' -d '{"job": { "title": "test title" }}'
-
-HTTP/1.1 422 Unprocessable Entity
-Content-Type: application/json; charset=utf-8
-
-{"errors":[{"detail":"Возникли ошибки: Поле 'Адрес' не может быть пустым"}]}
-
-```
-
-## Изменение вакансии
-
-Для изменения вакансии необходимо отправить PUT-запрос на `/api/external/v1/jobs/<id>`, где <id> - идентификатор вакансии. В ответе будет либо JSON-представление созданной вакансии, либо сообщение об ошибке.
-
-Пример успешного обновления вакансии:
-
-```
-$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/jobs/122 -H 'Content-Type: application/json' -d '{"job": { "title": "Новая тестовая вакансия" }}'
-
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-
-{"data":{"id":"122","type":"job","attributes":{"title": "Новая тестовая вакансия", "description": "Тестовое описание", "lat": 55.35, "long": 37.55, "address": "Москва. Солянка ул., 9","salary_from":null,"salary_to":null,"salary_period":null,"expires_at": "2019-03-14T22:17:56.961+03:00","remote": true}}}
-```
-
-## Получение информации о конкретной вакансии
-
-Для получения информации о конкретной вакансии, необходимо отправить GET-запрос на `/api/external/v1/jobs/<id>`, где <id> - идентификатор вакансии. В ответе будет JSON-представление вакансии либо сообщение об ошибке, если такой вакансии не существует.
-
-```$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/jobs/254
-
-HTTP/1.1 200 OK
+HTTP/2 200
 Content-Type: application/json; charset=utf-8
 
 {
     "data": [
         {
-            "id": "254",
-            "type": "job",
+            "id": "1",
+            "type": "nationality",
             "attributes": {
-                "title": "Первая тестовая вакансия",
-                "description": "Описание первой тестовой вакансии",
-                "status": "active",
-                "lat": 55.7346276065292,
-                "long": 37.5734168663621,
-                "address": "Москва, улица Еланского, 2",
-                "salary_from": null,
-                "salary_to": null,
-                "salary_period": null,
-                "expires_at": "2019-03-22T18:02:13.462+03:00",
-                "remote": true
+                "id": 1,
+                "name": "Российская Федерация"
+            }
+        },
+        {
+            "id": "3",
+            "type": "nationality",
+            "attributes": {
+                "id": 3,
+                "name": "Азербайджан"
+            }
+        },
+        {
+            "id": "5",
+            "type": "nationality",
+            "attributes": {
+                "id": 5,
+                "name": "Армения"
+            }
+        },
+        {
+            "id": "4",
+            "type": "nationality",
+            "attributes": {
+                "id": 4,
+                "name": "Республика Беларусь"
+            }
+        },
+        {
+            "id": "6",
+            "type": "nationality",
+            "attributes": {
+                "id": 6,
+                "name": "Грузия"
+            }
+        },
+        {
+            "id": "7",
+            "type": "nationality",
+            "attributes": {
+                "id": 7,
+                "name": "Казахстан"
+            }
+        },
+        {
+            "id": "8",
+            "type": "nationality",
+            "attributes": {
+                "id": 8,
+                "name": "Киргизия"
+            }
+        },
+        {
+            "id": "9",
+            "type": "nationality",
+            "attributes": {
+                "id": 9,
+                "name": "Молдавия"
+            }
+        },
+        {
+            "id": "10",
+            "type": "nationality",
+            "attributes": {
+                "id": 10,
+                "name": "Таджикистан"
+            }
+        },
+        {
+            "id": "11",
+            "type": "nationality",
+            "attributes": {
+                "id": 11,
+                "name": "Узбекистан"
+            }
+        },
+        {
+            "id": "12",
+            "type": "nationality",
+            "attributes": {
+                "id": 12,
+                "name": "Украина"
+            }
+        },
+        {
+            "id": "13",
+            "type": "nationality",
+            "attributes": {
+                "id": 13,
+                "name": "Другое"
             }
         }
+    ],
+    "links": {
+        "first": "http://api.staging.iconjob.co/api/external/v1/nationalities?page%5Bnumber%5D=1",
+        "last": "http://api.staging.iconjob.co/api/external/v1/nationalities?page%5Bnumber%5D=1"
+    }
 }
+
 ```
 
-## Закрытие вакансии
+## Отклики
 
-Для того, чтобы снять вакансию из ленты, необходимо отправить POST-запрос вида `/api/external/v1/jobs/<id>/close`, где `<id>` - идентификатор вакансии, а также параметр `reason`, который должен принимать одно из следующих значений:
-
-* `closed_found` - вакансия закрыта, кандидат найден
-* `closed_irrelevant` - вакансия более неактуальна
-
-
-В ответе будет JSON-представление закрытой вакансии либо сообщение об ошибке.
-
-
-## Продление вакансии
-
-Для того, чтобы продлить вакансию, необходимо отправить POST-запрос вида `/api/external/v1/jobs/<id>/revive`, где `<id>` - идентификатор вакансии.
-
-В ответе будет JSON-представление закрытой вакансии либо сообщение об ошибке.
-
-## Получение списка откликов
+### Получение списка откликов
 
 Несмотря на то, что при создании нового отклика API VK Работа производит запрос во внешнюю учетную систему, для синхронизации разных источников данных можно получить список всех откликов на все вакансии.
 
@@ -893,7 +1054,7 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
-## Изменение статуса отклика
+### Изменение статуса отклика
 
 Для изменения статуса отклика необходимо сделать POST-запрос на `/api/external/v1/applications/<application_id>/proceed`. В ответе будет JSON API представление выбранного отклика либо сообщение об ошибке. В параметрах необходимо передать статус отклика, который может принимать одно из значений атрибута `status` модели `Application`, описанных выше.
 
@@ -1020,8 +1181,9 @@ Content-Type: application/json; charset=utf-8
 {"errors":[{"detail":"Неизвестный статус"}]}
 ```
 
+## Баланс компании и VAS'ы
 
-## Получение состояния баланса компании
+### Получение состояния баланса компании
 
 Для получение баланса VAS'ов необходимо отправить GET-запрос на `/api/external/v1/company`.
 
@@ -1055,7 +1217,7 @@ Content-Type: application/json; charset=utf-8
 
 ```
 
-## Получение списка транзакций VAS'ов
+### Получение списка транзакций VAS'ов
 
 Для получение списка транзакций необходимо отправить GET-запрос на `/api/external/v1/vas_transactions`.
 
@@ -1110,11 +1272,11 @@ Content-Type: application/json; charset=utf-8
 
 Для применения VAS'ов необходимо отправить POST-запрос на `/api/external/v1/paid_actions`.
 Параметры:
-    * `actions` - применяемые действия, массив
-        * `action` - действие, которое применяется. Желательно брать код из раздела "Аббревиатуры".
-        * `job_id` - id вакансии, к которому применяется VAS(если необходимо)
-        * `user_id` - id кандидата, с которым создается диалог/чей телефон просматривается(если необходимо)
-    * `use_account` - баланс, с которого идет списание. Принимает значения `bonus`(оплата бонусами), `company`(оплата с кошелька). По умолчанию `company`
+- `actions` - применяемые действия, массив
+    - `action` - действие, которое применяется. Желательно брать код из раздела "Аббревиатуры".
+    - `job_id` - id вакансии, к которому применяется VAS (если необходимо)
+    - `user_id` - id кандидата, с которым создается диалог/чей телефон просматривается (если необходимо)
+- `use_account` - баланс, с которого идет списание. Принимает значения `bonus` (оплата бонусами), `company` (оплата с кошелька). По умолчанию `company`
 
 В ответе возвращаются применные действия и текущее состояние подписки(поле `meta`->`company`).
 
@@ -1210,7 +1372,319 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
-## Загрузка фонового изображения
+## Поиск и покупка контактов из базы резюме
+
+### Поиск кандидатов
+
+Для поиска кандидатов необходимо отправить GET-запрос на `/api/external/v1/candidates`.
+
+Обязательно наличие одного из вариантов фильтров:
+* `address` - адрес
+* `city_id` - id города из справочника городов
+* `region_id` - id региона из справочника регионов
+* `lat`, `long`, `distance_to` - корординаты и радиус поиска (в км)
+
+Список опциональных фильтров:
+* `page` - страница пагинации (по-умолчанию `1`)
+* `per_page` - количество элементов на странице (от `1` до `50`, по-умолчанию `50`)
+* `distance_to` - радиус поиска (в км)
+* `month_of_experience` - опыт работы (в месяцах)
+* `key_word` - ключевые слова
+* `nationality_id` - гражданство (id страны, см. [справочник гражданств](#получение-списка-гражданств))
+* `has_avatar` - только с фото (1 - есть, 0 - без указания)
+* `medical_record` - есть медкнижка (1 - есть, 0 - без указания)
+* `sex` - пол (Male - мужской, Female - женский)
+* `has_comment` - резюме с заметками (1 - есть, 0 - без указания)
+* `address` - адрес, рядом с которым ведется поиск
+* `show_bought` - только купленные контакты (1 - есть, 0 - без указания)
+* `driving_license_categories` - категории водительских прав (доступные значения A, A1, B, BE, B1, C, CE, C1, C1E, D, DE, D1, D1E, M, TM, TB)
+* `age_from` - возраст от (допустимый диапазон 14 - 99)
+* `age_to` - возраст до (допустимый диапазон 14 - 99)
+* `key_word` - ключевые слова
+
+Результат будет в следующем виде (JSON API-ответ сжат и отформатирован для наглядности):
+
+```
+$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/candidates?address=Москва
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "data": [
+    {
+      "id": "29638",
+      "type": "candidate_search",
+      "attributes": {
+        "id": 29638,
+        "first_name": "Иван",
+        "last_name": "Иванов",
+        "description": "Небольшой текст о себе",
+        "lat": 56.3209074862824,
+        "long": 44.0091540738274,
+        "education": "Среднее образование",
+        "languages": "Pусский",
+        "online": false,
+        "last_online_at": "2021-09-14T01:48:42.391+03:00",
+        "created_at": "2020-07-22T16:21:08.495+03:00",
+        "updated_at": "2021-09-14T01:53:13.227+03:00",
+        "views_count": 43,
+        "driving_license_categories": [
+          "A",
+          "A1",
+          "B",
+          "BE",
+          "B1",
+          "C",
+          "CE",
+          "C1",
+          "C1E",
+          "D",
+          "DE",
+          "D1",
+          "D1E",
+          "M",
+          "TM",
+          "TB"
+        ],
+        "medical_record": false,
+        "candidate_status": "candidate_active",
+        "active_candidate": true,
+        "comment": {
+          "data": null
+        },
+        "comment_count": 0,
+        "has_vk_client": false,
+        "already_contacted": true,
+        "highlighted_till": null,
+        "avatar": {
+          "data": {
+            "id": "5312",
+            "type": "candidate_avatar",
+            "attributes": {
+              "id": 5312,
+              "content_type": "image/jpeg",
+              "small": "https://hb.bizmrg.com/worki-staging/static/closed_contact_96x96.png",
+              "medium": "https://hb.bizmrg.com/worki-staging/static/closed_contact_165x165.png",
+              "original": "https://hb.bizmrg.com/worki-staging/static/closed_contact_165x165.png"
+            }
+          }
+        },
+        "background": null,
+        "email_sendable?": false,
+        "banned": false,
+        "deleted?": false,
+        "disability_group": 0,
+        "vaccinated": false,
+        "city_name": "Нижний Новгород",
+        "certificates": {
+          "skillbox": true
+        },
+        "age": 19,
+        "viewing_contacted_recruiter": true,
+        "view_by_himself": false
+      },
+      "relationships": {
+        "professions": {
+          "data": []
+        },
+        "preferred_professions": {
+          "data": []
+        },
+        "nationality": {
+          "data": {
+            "id": "1",
+            "type": "nationality"
+          }
+        },
+        "experiences": {
+          "data": []
+        }
+      }
+    },
+    ...
+  ],
+  "included": [
+    {
+      "id": "1",
+      "type": "nationality",
+      "attributes": {
+        "id": 1,
+        "name": "Российская Федерация"
+      }
+    },
+    {
+      "id": "94",
+      "type": "profession",
+      "attributes": {
+        "id": 94,
+        "title": "Курьер"
+      }
+    },
+    ...
+  ],
+  "meta": {
+    "total": 3443,
+    "total_all_time": 3443
+  }
+}
+```
+
+### Покупка контакта
+
+Для покупки контакта кандидата воспользуйтесь методом [`/api/external/v1/paid_actions`](#применение-vasов).
+
+Параметры:
+- `actions` - применяемые действия, массив
+    - `action` - действие, передайте значение `contact_view`
+    - `user_id` - id кандидата, чей телефон просматривается
+- `use_account` - баланс, с которого идет списание. Принимает значения `bonus` (оплата бонусами), `company` (оплата с кошелька). По умолчанию `company`
+
+```
+$ curl -i -H 'Authorization: Worki <JWT Token>' -d '{"actions":[{"action":"contact_view", "user_id": "5657"}]}' -H "Content-Type: application/json" -X POST https://api.iconjob.co/api/external/v1/paid_actions
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "data":[
+    {
+      "id":"0",
+      "type":"paid_action",
+      "attributes":{
+        "id":0,
+        "error_message":null,
+        "status":"success",
+        "origin":{
+          "action":"contact_view",
+          "count":1,
+          "job_id":null,
+          "user_id":"5657",
+          "price":1500,
+          "region_id":80
+        },
+        "job":null,
+        "user":{
+          "data":{
+            "id":"5657",
+            "type":"candidate",
+            "attributes":{
+              "id":5657,
+              "first_name":"имя",
+              "last_name":"фамилия",
+              "phone":"75345345345",
+              "description":null,
+              "lat":59.9845226,
+              "long":30.2447583,
+              "years_of_experience":null,
+              "education":null,
+              "languages":null,
+              "last_online_time":"2021-06-28T15:15:37.776+03:00",
+              "created_at":"2019-09-23T17:21:45.211+03:00",
+              "updated_at":"2019-09-23T17:25:30.025+03:00",
+              "email":null,
+              "birthday":"1999-11-11",
+              "driving_license_categories":[
+                
+              ],
+              "medical_record":null,
+              "active_candidate":true,
+              "accept_calls":false,
+              "address":null,
+              "city_name":"Санкт-Петербург"
+            },
+            "relationships":{
+              "avatar":{
+                "data":null
+              },
+              "background":{
+                "data":null
+              },
+              "experiences":{
+                "data":[
+                    
+                ]
+              },
+              "nationality":{
+                "data":{
+                  "id":"1",
+                  "type":"nationality"
+                }
+              },
+              "video_resume":{
+                "data":null
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "meta":{
+    "company":{
+      "data":{
+        "id":"17282",
+        "type":"company",
+        "attributes":{
+          "id":17282,
+          "balance":"67500.0",
+          "wallet_id":"W843633",
+          "otvas_jobs_limit":0,
+          "otvas_super_jobs_limit":0,
+          "otvas_ultra_jobs_limit":0,
+          "otvas_refreshes_limit":0,
+          "otvas_highlights_limit":0,
+          "otvas_views_limit":0,
+          "otvas_elevations_plus_limit":0,
+          "otvas_elevations_1d_limit":0,
+          "otvas_elevations_3d_limit":0,
+          "otvas_expires_at":null
+        }
+      }
+    }
+  }
+}
+```
+
+### Просмотр контакта
+
+Для просмотра купленного контакта необходимо отправить GET-запрос на `/api/external/v1/candidates/<id>/phone`, где <id> - идентификатор кандидата.
+
+**Важно!** В случае если контакт не куплен, произойдет автоматическое списание средств!
+
+Результат будет в следующем виде (JSON API-ответ отформатирован для наглядности):
+
+```
+$ curl -i -H 'Authorization: Worki <JWT Token>' https://api.iconjob.co/api/external/v1/candidates/31136/phone
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "data": {
+    "id": "31136",
+    "type": "user",
+    "attributes": {
+      "phone": "79001111111",
+      "contact_bought": true,
+      "spent_counts": {
+        "count_for_packets": 1,
+        "count_for_subscription": 0,
+        "count_for_company": 0,
+        "count_for_bonus": 0,
+        "count_for_services": 0
+      },
+      "packet_used": true,
+      "contact_used": true,
+      "subscription": null
+    }
+  }
+}
+```
+
+## Фоновое изображение
+
+### Загрузка фонового изображения
 
 Для добавления фонового изображения к необходимо отправить PUT-запрос на `/api/external/v1/background` с  заголовком `Content-Type: multipart/form-data`.
 
@@ -1276,7 +1750,7 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
-## Удаление фонового изображения
+### Удаление фонового изображения
 
 Для удаления фонового изображения к необходимо отправить DELETE-запрос на `/api/external/v1/background`
 
