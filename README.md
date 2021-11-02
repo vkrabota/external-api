@@ -373,10 +373,11 @@ Content-Type: application/json; charset=utf-8
 
 ### Закрытие вакансии
 
-Для того, чтобы снять вакансию из ленты, необходимо отправить POST-запрос вида `/api/external/v1/jobs/<id>/close`, где `<id>` - идентификатор вакансии, а также параметр `reason`, который должен принимать одно из следующих значений:
+Для того, чтобы снять вакансию из ленты, необходимо отправить POST-запрос вида `/api/external/v1/jobs/<id>/close`, где `<id>` - идентификатор вакансии, а также необязательный параметр `reason`, который может принимать одно из следующих значений:
 
+* `closed_irrelevant` - вакансия более неактуальна (по-умолчанию)
 * `closed_found` - вакансия закрыта, кандидат найден
-* `closed_irrelevant` - вакансия более неактуальна
+* `closed_found_other` - вакансия закрыта, кандидат найден в другом месте
 
 
 В ответе будет JSON-представление закрытой вакансии либо сообщение об ошибке.
@@ -1327,7 +1328,7 @@ Content-Type: application/json; charset=utf-8
 Результатом будет в следующем виде (JSON API-ответ отформатирован для наглядности)
 
 ```
-$ curl -i -H 'Authorization: Worki <JWT Token>' -d '{"actions":[{"action":"job_highlight", "job_id": "1"]}' -H "Content-Type: application/json" -X POST https://api.iconjob.co/api/external/v1/paid_actions
+$ curl -i -H 'Authorization: Worki <JWT Token>' -d '{"actions":[{"action":"job_highlight", "job_id": "1"}]}' -H "Content-Type: application/json" -X POST https://api.iconjob.co/api/external/v1/paid_actions
 
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
