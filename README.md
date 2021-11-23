@@ -7,6 +7,7 @@
 * [Аббревиатуры](#аббревиатуры)
 * [Основные схемы данных](#основные-схемы-данных)
   * [Job](#job)
+  * [Category](#category)
   * [Profession](#profession)
   * [Application](#application)
   * [Candidate](#candidate)
@@ -25,6 +26,7 @@
   * [Получение информации о конкретной вакансии](#получение-информации-о-конкретной-вакансии)
   * [Закрытие вакансии](#закрытие-вакансии)
   * [Продление вакансии](#продление-вакансии)
+* [Получение списка категорий профессий](#получение-списка-категорий-профессий)
 * [Получение списка профессий](#получение-списка-профессий)
 * [Получение списка регионов](#получение-списка-регионов)
 * [Получение списка городов](#получение-списка-городов)
@@ -80,6 +82,19 @@
 * `auto_renew` - флаг автоматического продления вакансии
 * `remote` - удаленная работа
 * `current_publication_type` - текущий тип публикации. Бывает: `not_published` - не опубликована, `job_publish` - обычная публикация, `super_job_publish` - продвинутая публикация, `ultra_job_publish` - премиум публикация
+
+#### Category
+
+Модель `Category` служит для хранения справочника категорий вакансий в API VK Работа и имеет следующие атрибуты:
+
+* `id` - первичный ключ, идентификатор категории профессий в API VK Работа
+* `name` - название категории профессий, строка
+* `transliterated_name` - транслитерация названия категории профессий, строка
+* `popular` - признак популярности категории профессий, булевый тип
+* `sorting_value` - порядок сортировки категории профессий, число
+* `salary_to` - максимальное значение по зарплате в месяц для категории профессий в рублях, число
+* `icon_image_url` - путь до иконки категории профессий, строка
+* `alternative_icon_image_url` - путь до альтернативной иконки категории профессий, строка
 
 #### Profession
 
@@ -392,6 +407,52 @@ Content-Type: application/json; charset=utf-8
 * `ultra_job_publish` - премиум публикация
 
 В ответе будет JSON-представление продлённой вакансии либо сообщение об ошибке.
+
+## Получение списка категорий профессий
+
+Для получения списка категорий профессий необходимо отправить GET-запрос на `/api/external/v1/categories` (аутентификация не требуется). Результатом будет список категорий профессий (JSON API-ответ сжат и отформатирован для наглядности):
+
+```
+$ curl -i https://api.iconjob.co/api/external/v1/categories
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "data": [
+    {
+      "id": "1",
+      "type": "category",
+      "attributes": {
+        "id": 1,
+        "name": "Общепит",
+        "transliterated_name": "obshchepit",
+        "popular": true,
+        "sorting_value": 24,
+        "salary_to": 150000,
+        "icon_image_url": "https://hb.bizmrg.com/worki-production/uploads/category/icon_image/1/restaurants.png",
+        "alternative_icon_image_url": null
+      }
+    },
+    {
+      "id": "2",
+      "type": "category",
+      "attributes": {
+        "id": 10,
+        "name": "Магазины",
+        "transliterated_name": "magaziny",
+        "popular": true,
+        "sorting_value": 43,
+        "salary_to": null,
+        "icon_image_url": "https://hb.bizmrg.com/worki-staging/uploads/category/icon_image/2/retail.png",
+        "alternative_icon_image_url": null
+      }
+    },
+    ...
+  ]
+}
+
+```
 
 ## Получение списка профессий
 
