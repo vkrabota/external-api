@@ -147,7 +147,6 @@
     * `duration` - необязательный атрибут, число месяцев работы на данном месте
     * `current` - обязательный атрибут, флаг, сигнализирующий, что данное место работы является текущим
 * `nationality` - необязательный атрибут, строка, информация о гражданстве кандидата
-* `video_resume` - необязательный атрибут, строка, ссылка на видео резюме кандидата
 
 #### Company
 
@@ -776,9 +775,6 @@ Content-Type: application/json; charset=utf-8
                 },
                 "nationality": {
                     "data": null
-                },
-                "video_resume": {
-                    "data": null
                 }
             }
         },
@@ -891,9 +887,6 @@ Content-Type: application/json; charset=utf-8
                     ]
                 },
                 "nationality": {
-                    "data": null
-                },
-                "video_resume": {
                     "data": null
                 }
             }
@@ -1008,9 +1001,6 @@ Content-Type: application/json; charset=utf-8
                 },
                 "nationality": {
                     "data": null
-                },
-                "video_resume": {
-                    "data": null
                 }
             }
         },
@@ -1123,9 +1113,6 @@ Content-Type: application/json; charset=utf-8
                     ]
                 },
                 "nationality": {
-                    "data": null
-                },
-                "video_resume": {
                     "data": null
                 }
             }
@@ -1240,9 +1227,6 @@ Content-Type: application/json; charset=utf-8
                     ]
                 },
                 "nationality": {
-                    "data": null
-                },
-                "video_resume": {
                     "data": null
                 }
             }
@@ -1720,9 +1704,6 @@ Content-Type: application/json; charset=utf-8
                   "id":"1",
                   "type":"nationality"
                 }
-              },
-              "video_resume":{
-                "data":null
               }
             }
           }
