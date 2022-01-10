@@ -1872,7 +1872,7 @@ curl --request DELETE \
   --header 'authorization: Worki <JWT Token>' \
   --header 'content-type: application/json' \
   --cookie __profilin=p%253Dt \
-  --data '{ "job_ids ": [
+  --data '{ "job_ids": [
         "39085", "39086"
     ]
 }'
